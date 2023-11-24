@@ -1,8 +1,11 @@
-import React from 'react'
+import React, { useState } from 'react'
 import NavBar from './NavBar'
 import Form from './Form'
+import SimilarImages from './SimilarImages'
 
 export default function Home() {
+    const [similarImagesData, setSimilarImagesData] = useState({})
+
     return (
         <div>
             <NavBar />
@@ -10,7 +13,11 @@ export default function Home() {
                 CONTENT BASED IMAGE RETRIEVAL
             </div>
 
-            <Form />
+            <Form setSimilarImagesData={setSimilarImagesData} />
+
+            {
+                similarImagesData.hasOwnProperty('files') && <SimilarImages similarImagesData={similarImagesData} />
+            }
         </div>
     )
 }

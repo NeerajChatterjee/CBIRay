@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react'
 import { useState } from 'react'
 import defaultImage from '../defaultImage.jpg'
+import axios from 'axios'
 
-export default function Form() {
+export default function Form({ setSimilarImagesData }) {
 
     const [selectedImage, setSelectedImage] = useState(null)
     const [selectedImageURL, setSelectedImageURL] = useState(null)
@@ -51,15 +52,13 @@ export default function Form() {
 
         var request = new FormData();
 
-        request.append("file", selectedImage);
+        request.append("file", selectedImage)
+        request.append("model", eModel.value)
+        request.append("numberOfImages", eNumberOfImages.value)
 
-        const response = await fetch("http://127.0.0.1:5001/search", {
-            method: "POST",
-            mode: "no-cors",
-            body: request
-        })
-
-        console.log(response)
+        axios.post("http://127.0.0.1:5001/search", request)
+            .then(response => setSimilarImagesData(response.data))
+            .catch(error => console.log(error))
 
     }
 
@@ -91,7 +90,7 @@ export default function Form() {
 
             <div>
                 <div className='d-flex justify-content-center fs-4 mb-2'>Selected X-Ray Image</div>
-                <div className='d-flex justify-content-center fs-4'>
+                <div className='d-flex justify-content-center fs-4 mb-4'>
                     <img src={selectedImageURL === null ? defaultImage : selectedImageURL} width={200} height={200} />
                 </div>
             </div>
