@@ -16,8 +16,10 @@ export default function Home() {
             <Form setSimilarImagesData={setSimilarImagesData} />
 
             {
-                similarImagesData.hasOwnProperty('files') && <SimilarImages similarImagesData={similarImagesData} />
+                similarImagesData.hasOwnProperty('files') && (<SimilarImages similarImagesData={similarImagesData} />)
             }
+
+
         </div>
     )
 }
