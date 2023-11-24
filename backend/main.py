@@ -1,16 +1,36 @@
-# This is a sample Python script.
+from flask import Flask, request, jsonify, Response
+from flask_cors import CORS
+from werkzeug.utils import secure_filename
+import os
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+UPLOAD_FOLDER = './static/uploads'
+ALLOWED_EXTENSIONS = {'jpg', 'jpeg'}
+
+app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+CORS(app, resources={r"/*": {"origins": "*", "allow_headers": "*", "expose_headers": "*"}})
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
+@app.route("/search", methods=["POST"])
+def search():
+    if request.method == "POST":
+        # check if the post request has the file part
+        if 'file' not in request.files:
+            return Response("{'message': 'Bad request', 'status_code': 400}", status=400, mimetype='application/json')
+        file = request.files['file']
+        # If the user does not select a file, the browser submits an
+        # empty file without a filename.
+        if file.filename == '':
+            return Response("{'message': 'Bad request', 'status_code': 400}", status=400, mimetype='application/json')
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            return Response("{'message': 'Successful', 'status_code': 200}", status=200, mimetype='application/json')
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+
+app.run(debug=True, port=5001)
