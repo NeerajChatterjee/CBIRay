@@ -6,6 +6,7 @@ import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 import pandas as pd
 import cv2
+from backend.utils.find_classification import find_image_classification
 
 
 features_df = pd.DataFrame([])
@@ -46,23 +47,6 @@ def create_histogram(fv):
         else:
             hist.append(0)
     return hist
-
-
-def cosine(fv1, fv2):
-    distance = np.dot(fv1, fv2) / (np.linalg.norm(fv1) * np.linalg.norm(fv2))
-
-    return distance
-
-
-def find_image_classification(filename):
-    print(type(filename))
-    print(filename)
-    if 'NORMAL' in filename or filename[0:2] == 'IM':
-        return 'NORMAL'
-    elif 'person' in filename:
-        return 'PNEUMONIA'
-    else:
-        return 'UNCLASSIFIED'
 
 
 def retrieve_similar_images_lbp(image_path, images_count):
