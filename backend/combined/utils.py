@@ -1,12 +1,14 @@
-from keras.applications.vgg16 import preprocess_input
-from keras.preprocessing import image
 import time
+
+import numpy
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 import pandas as pd
 import collections
 from backend.utils.find_classification import find_image_classification
 from backend.utils.create_model import create_vgg_model
+from backend.cnn.utils import extract_features as extract_deep_features
+from backend.lbp.utils import compute_lbp_features, create_histogram
 
 features_df = pd.DataFrame([])
 query_image = None
@@ -15,12 +17,12 @@ vgg_model = None
 times = 1
 
 
-def load_cnn_features_and_model():
+def load_combined_features_and_model():
     s_time = time.time()
     global features_df, vgg_model
 
     # Load the features from the CSV file
-    features_df = pd.read_csv('./cnn/images_deep_features.csv')
+    features_df = pd.read_csv('./combined/images_combined_features.csv')
 
     e_time = time.time()  # ~2 seconds
     print("CNN features loaded in time: ", e_time - s_time)
@@ -34,33 +36,18 @@ def load_cnn_features_and_model():
     print("VGG model created in time: ", e_time - s_time)
 
 
-# Function to extract features from an image
-def extract_features(img_path, model):
-    if model is None:
-        return
+def retrieve_similar_images_combined(image_path, images_count):
+    query_features_vgg = extract_deep_features(image_path, vgg_model)
+    query_features_lbp = numpy.asarray(create_histogram(compute_lbp_features(image_path)))
 
-    img = image.load_img(img_path, target_size=(240, 240))  # VGG16 input size
-    img_array = image.img_to_array(img)
-    img_array = np.expand_dims(img_array, axis=0)
-    img_array = preprocess_input(img_array)
-    features = model.predict(img_array)
-
-    # arr_features = np.array(features)
-
-    flatten_features = features.flatten()
-
-    return flatten_features
-
-
-def retrieve_similar_images_vgg(image_path, images_count):
-
-    query_features = extract_features(image_path, vgg_model)
+    query_features_combined = np.append(query_features_vgg, query_features_lbp, axis=0)
+    print(len(query_features_combined))
 
     # Remove the 'Filename' column for comparison
     stored_features = features_df.drop(columns=['Filename']).values
 
     # Calculate cosine similarity between the query image features and stored features
-    similarities = cosine_similarity([query_features], stored_features)[0]
+    similarities = cosine_similarity([query_features_combined], stored_features)[0]
 
     top_n = int(images_count)
 

@@ -76,6 +76,7 @@ export default function Form({ setSimilarImagesData }) {
                         <option value='select' selected>Select model</option>
                         <option value="lbp">Local Binary Pattern (LBP)</option>
                         <option value="vgg16">VGG-16</option>
+                        <option value="combined">Combined Model</option>
                     </select>
 
                     <select id='numberOfImages' name='numberOfImages' className="form-select mx-4" aria-label="Number of similar images">

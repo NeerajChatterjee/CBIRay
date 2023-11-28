@@ -1,6 +1,6 @@
 from skimage.feature import local_binary_pattern
 from collections import Counter
-import os
+import collections
 import time
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
@@ -74,6 +74,9 @@ def retrieve_similar_images_lbp(image_path, images_count):
     # Print the top n most similar filenames and their similarity values
     for idx, (filename, sim_value) in enumerate(zip(top_similar_filenames, top_similar_values), 1):
         top_similar_classifications.append(find_image_classification(filename))
-        print(f"{idx}. {filename} - Similarity: {sim_value:.4f}")
+        # print(f"{idx}. {filename} - Similarity: {sim_value:.4f}")
+
+    fq = collections.Counter(top_similar_classifications)
+    print(dict(fq))
 
     return [top_similar_filenames, top_similar_values, top_similar_classifications]

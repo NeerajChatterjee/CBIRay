@@ -4,6 +4,7 @@ from werkzeug.utils import secure_filename
 import os
 from lbp.utils import retrieve_similar_images_lbp, load_lbp_database_features
 from cnn.utils import retrieve_similar_images_vgg, load_cnn_features_and_model
+from combined.utils import retrieve_similar_images_combined, load_combined_features_and_model
 
 UPLOAD_FOLDER = './static/uploads'
 ALLOWED_EXTENSIONS = {'jpg', 'jpeg'}
@@ -17,6 +18,7 @@ isLoad = True
 if isLoad:
     load_lbp_database_features()
     load_cnn_features_and_model()
+    load_combined_features_and_model()
     isLoad = False
 
 
@@ -66,6 +68,24 @@ def search():
 
                 [images_filenames, images_values, images_classification] = \
                     retrieve_similar_images_vgg(file_path, images_count)
+
+                if len(images_filenames) == 0 or len(images_values) == 0 or len(images_classification) == 0:
+                    return Response("{'message': 'Server internal error', 'status_code': 500}", status=500,
+                                    mimetype='application/json')
+
+                response = {
+                    'message': 'Successful',
+                    'status_code': 200,
+                    'files': list(images_filenames),
+                    'similarityValues': list(images_values),
+                    'classifications': list(images_classification)
+                }
+                return jsonify(response), 200
+            elif request.form.get('model') == 'combined':
+                images_count = request.form.get('numberOfImages')
+
+                [images_filenames, images_values, images_classification] = \
+                    retrieve_similar_images_combined(file_path, images_count)
 
                 if len(images_filenames) == 0 or len(images_values) == 0 or len(images_classification) == 0:
                     return Response("{'message': 'Server internal error', 'status_code': 500}", status=500,
