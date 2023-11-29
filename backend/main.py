@@ -26,6 +26,24 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+def generate_response(file_path, retrieval_similar_images):
+    images_count = request.form.get('numberOfImages')
+    [images_filenames, images_values, images_classification] = \
+        retrieval_similar_images(file_path, images_count)
+
+    if len(images_filenames) == 0 or len(images_values) == 0 or len(images_classification) == 0:
+        return Response("{'message': 'Server internal error', 'status_code': 500}", status=500,
+                        mimetype='application/json')
+
+    response = {
+        'message': 'Successful',
+        'status_code': 200,
+        'files': list(images_filenames),
+        'similarityValues': list(images_values),
+        'classifications': list(images_classification)
+    }
+    return jsonify(response), 200
+
 
 @app.route("/search", methods=["POST"])
 def search():
@@ -45,63 +63,18 @@ def search():
             file.save(file_path)
 
             if request.form.get('model') == 'lbp':
-                images_count = request.form.get('numberOfImages')
-
-                [images_filenames, images_values, images_classification] =\
-                    retrieve_similar_images_lbp(file_path, images_count)
-
-                if len(images_filenames) == 0 or len(images_values) == 0 or len(images_classification) == 0:
-                    return Response("{'message': 'Server internal error', 'status_code': 500}", status=500,
-                                    mimetype='application/json')
-
-                response = {
-                    'message': 'Successful',
-                    'status_code': 200,
-                    'files': list(images_filenames),
-                    'similarityValues': list(images_values),
-                    'classifications': list(images_classification)
-                }
-                return jsonify(response), 200
+                return generate_response(file_path,retrieve_similar_images_lbp)
 
             elif request.form.get('model') == 'vgg16':
-                images_count = request.form.get('numberOfImages')
-
-                [images_filenames, images_values, images_classification] = \
-                    retrieve_similar_images_vgg(file_path, images_count)
-
-                if len(images_filenames) == 0 or len(images_values) == 0 or len(images_classification) == 0:
-                    return Response("{'message': 'Server internal error', 'status_code': 500}", status=500,
-                                    mimetype='application/json')
-
-                response = {
-                    'message': 'Successful',
-                    'status_code': 200,
-                    'files': list(images_filenames),
-                    'similarityValues': list(images_values),
-                    'classifications': list(images_classification)
-                }
-                return jsonify(response), 200
+                return generate_response(file_path,retrieve_similar_images_vgg)
+                
             elif request.form.get('model') == 'combined':
-                images_count = request.form.get('numberOfImages')
-
-                [images_filenames, images_values, images_classification] = \
-                    retrieve_similar_images_combined(file_path, images_count)
-
-                if len(images_filenames) == 0 or len(images_values) == 0 or len(images_classification) == 0:
-                    return Response("{'message': 'Server internal error', 'status_code': 500}", status=500,
-                                    mimetype='application/json')
-
-                response = {
-                    'message': 'Successful',
-                    'status_code': 200,
-                    'files': list(images_filenames),
-                    'similarityValues': list(images_values),
-                    'classifications': list(images_classification)
-                }
-                return jsonify(response), 200
+                return generate_response(file_path,retrieve_similar_images_combined)
+            
             else:
                 return Response("{'message': 'Model not supported', 'status_code': 400}", status=400,
                                 mimetype='application/json')
 
 
 app.run(debug=True, port=5001)
+

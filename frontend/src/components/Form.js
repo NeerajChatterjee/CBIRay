@@ -1,6 +1,5 @@
-import React, { useEffect } from 'react'
-import { useState } from 'react'
-import defaultImage from '../defaultImage.jpg'
+import React, { useState } from 'react'
+import defaultImage from '../assets/defaultImage.jpg'
 import axios from 'axios'
 
 export default function Form({ setSimilarImagesData }) {
@@ -16,7 +15,7 @@ export default function Form({ setSimilarImagesData }) {
     }
 
     const handleChange = (e) => {
-        console.log(e.target.files[0])
+        console.log(e.target.files)
 
         if (e.target.files[0] === undefined) {
             setSelectedImage(null)
@@ -92,7 +91,7 @@ export default function Form({ setSimilarImagesData }) {
             <div>
                 <div className='d-flex justify-content-center fs-4 mb-2'>Selected X-Ray Image</div>
                 <div className='d-flex justify-content-center fs-4 mb-4'>
-                    <img src={selectedImageURL === null ? defaultImage : selectedImageURL} width={200} height={200} />
+                    <img src={selectedImageURL === null ? defaultImage : selectedImageURL} width={200} height={200} alt="Chest X-Ray"/>
                 </div>
             </div>
         </div>
