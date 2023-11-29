@@ -15,6 +15,6 @@ def create_vgg_model():
     model.add(layers.Dropout(0.5))
     model.add(layers.Dense(128, activation='relu'))
 
-    model.load_weights('./cnn/vgg_weights.h5')
+    model.load_weights('./backend/cnn/vgg_weights.h5')
 
     return model

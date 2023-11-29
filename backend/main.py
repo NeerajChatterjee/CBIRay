@@ -2,11 +2,15 @@ from flask import Flask, request, jsonify, Response
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
 import os
+import sys
+from dotenv import load_dotenv
+load_dotenv()
+sys.path.insert(0, os.getenv('PROJECT_PATH'))
 from lbp.utils import retrieve_similar_images_lbp, load_lbp_database_features
 from cnn.utils import retrieve_similar_images_vgg, load_cnn_features_and_model
 from combined.utils import retrieve_similar_images_combined, load_combined_features_and_model
 
-UPLOAD_FOLDER = './static/uploads'
+UPLOAD_FOLDER = './backend/static/uploads'
 ALLOWED_EXTENSIONS = {'jpg', 'jpeg'}
 
 app = Flask(__name__)
@@ -58,7 +62,7 @@ def search():
             return Response("{'message': 'Bad request', 'status_code': 400}", status=400, mimetype='application/json')
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
-            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename).replace("\\","/")
 
             file.save(file_path)
 

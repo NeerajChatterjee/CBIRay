@@ -20,7 +20,7 @@ def load_lbp_database_features():
     global features_df
 
     # Load the features from the CSV file
-    features_df = pd.read_csv('./lbp/images_lbp_features.csv')
+    features_df = pd.read_csv('./backend/lbp/images_lbp_features.csv')
 
     e_time = time.time()  # 10 minutes
     print(e_time - s_time)
