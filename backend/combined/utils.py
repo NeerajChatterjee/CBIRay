@@ -22,7 +22,7 @@ def load_combined_features_and_model():
     global features_df, vgg_model
 
     # Load the features from the CSV file
-    features_df = pd.read_csv('./combined/images_combined_features.csv')
+    features_df = pd.read_csv('./backend/combined/images_combined_features.csv')
 
     e_time = time.time()  # ~2 seconds
     print("CNN features loaded in time: ", e_time - s_time)

@@ -6,6 +6,7 @@ export default function ImageCard(props) {
             <img src={"http://127.0.0.1:5001/static/chest_xray/" + props.imageFileName}
                 height={250}
                 width={250}
+                alt="Chest X-ray"
             />
             <div className="card-body d-flex flex-column align-items-center">
                 <div className="card-title fw-semibold">
@@ -13,7 +14,8 @@ export default function ImageCard(props) {
                 </div>
                 <a href={"http://127.0.0.1:5001/static/chest_xray/" + props.imageFileName}
                     target='_blank'
-                    class="btn btn-light">View X-Ray
+                    class="btn btn-light"
+                    rel='noreferrer'>View X-Ray
                 </a>
             </div>
         </div>

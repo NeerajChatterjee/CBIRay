@@ -20,7 +20,7 @@ def load_cnn_features_and_model():
     global features_df, vgg_model
 
     # Load the features from the CSV file
-    features_df = pd.read_csv('./cnn/images_deep_features.csv')
+    features_df = pd.read_csv('./backend/cnn/images_deep_features.csv')
 
     e_time = time.time()  # ~2 seconds
     print("CNN features loaded in time: ", e_time - s_time)
