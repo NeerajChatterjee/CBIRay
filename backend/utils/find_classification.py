@@ -1,9 +1,10 @@
 def find_image_classification(filename):
-    print(type(filename))
-    print(filename)
-    if 'NORMAL' in filename or filename[0:2] == 'IM':
-        return 'NORMAL'
-    elif 'person' in filename:
+    if 'COVID19' in filename:
+        return 'COVID19'
+    elif 'PNEUMONIA' in filename:
         return 'PNEUMONIA'
+    elif 'NORMAL' in filename:
+        return 'NORMAL'
     else:
         return 'UNCLASSIFIED'
+

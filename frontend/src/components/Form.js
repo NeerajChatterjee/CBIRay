@@ -74,8 +74,13 @@ export default function Form({ setSimilarImagesData }) {
 
                     <select id='model' name='model' className="form-select mx-4" aria-label="Select model">
                         <option value='select' selected>Select model</option>
-                        <option value="lbp">Local Binary Pattern (LBP)</option>
+                        <option value="lbp">Local Binary Patterns (LBPs)</option>
                         <option value="vgg16">VGG-16</option>
+                        <option value="densenet121">DenseNet121</option>
+                        <option value="inception">InceptionV3</option>
+                        <option value="lbp_and_vgg16">LBPs & VGG-16</option>
+                        <option value="lbp_and_densenet121">LBPs & DenseNet121</option>
+                        <option value="lbp_and_inception">LBPs & InceptionV3</option>
                         <option value="combined">Combined Model</option>
                     </select>
 
@@ -92,7 +97,7 @@ export default function Form({ setSimilarImagesData }) {
             <div>
                 <div className='d-flex justify-content-center fs-4 mb-2'>Selected X-Ray Image</div>
                 <div className='d-flex justify-content-center fs-4 mb-4'>
-                    <img src={selectedImageURL === null ? defaultImage : selectedImageURL} width={200} height={200} />
+                    <img src={selectedImageURL === null ? defaultImage : selectedImageURL} width={100} height={100} />
                 </div>
             </div>
         </div>

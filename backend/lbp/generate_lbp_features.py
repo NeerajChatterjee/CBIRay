@@ -1,10 +1,7 @@
 import os
 import numpy as np
 import pandas as pd
-from utils import create_vgg_model, extract_features
-
-# First we'll train the model without Fine-tuning
-vgg_model = create_vgg_model()
+from utils import compute_lbp_features, create_histogram
 
 # Path to the directory containing images
 images_dir = './../static/dataset2024'
@@ -19,9 +16,13 @@ cnt = 0
 for filename in os.listdir(images_dir):
     if filename.endswith('.jpg') or filename.endswith('.jpeg') or filename.endswith('.png'):
         image_path = os.path.join(images_dir, filename)
-        img_features = extract_features(image_path, vgg_model)
-        features_list.append(img_features)
+        print(filename, image_path)
+        img_features = compute_lbp_features(image_path)
+        image_feature_vector = create_histogram(img_features)
+
+        features_list.append(image_feature_vector)
         filenames_list.append(filename)
+
         print(filename, cnt)
         cnt += 1
 
@@ -34,4 +35,5 @@ features_df = pd.DataFrame(features_array)
 features_df['Filename'] = filenames_array
 
 # Save features to a CSV file
-features_df.to_csv('new_images_deep_features.csv', index=False)
+features_df.to_csv('new_images_lbp_features.csv', index=False)
+
